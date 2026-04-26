@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { ShieldCheck, Lock, Globe, PhoneCall } from "lucide-react";
+import { ShieldCheck, Lock, Globe } from "lucide-react";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -63,15 +62,19 @@ export default function Home() {
                 المنصة الرسمية الموحدة لسداد كافة الرسوم الحكومية، المخالفات المرورية، وفواتير الخدمات العامة والخاصة عبر قنوات دفع آمنة ومشفرة.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
-                <Button 
-                  onClick={() => setLocation("/user-data")}
-                  className="bg-amber-500 hover:bg-amber-600 text-white text-xl py-8 px-12 rounded-lg shadow-2xl shadow-amber-500/20 transition-all transform hover:-translate-y-1 font-bold"
+                <a 
+                  href="/user-data"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLocation("/user-data");
+                  }}
+                  className="bg-amber-500 hover:bg-amber-600 text-white text-xl py-4 px-12 rounded-lg shadow-2xl shadow-amber-500/20 transition-all transform hover:-translate-y-1 font-bold inline-block"
                 >
                   ابدأ الخدمة الآن
-                </Button>
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20 py-8 px-8 rounded-lg font-bold">
+                </a>
+                <a href="#" className="bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-lg font-bold inline-block">
                   دليل المستخدم
-                </Button>
+                </a>
               </div>
             </div>
 
@@ -125,11 +128,6 @@ export default function Home() {
             <p className="text-sm leading-relaxed">
               البوابة الوطنية الموحدة للمدفوعات الرقمية في دولة الإمارات العربية المتحدة. تهدف المنصة إلى تعزيز التحول الرقمي وتسهيل المعاملات المالية للمواطنين والمقيمين.
             </p>
-            <div className="flex gap-4 pt-2">
-              <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-all cursor-pointer">f</div>
-              <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-all cursor-pointer">t</div>
-              <div className="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-amber-500 hover:text-white transition-all cursor-pointer">i</div>
-            </div>
           </div>
           
           <div>
@@ -159,9 +157,6 @@ export default function Home() {
                 <span className="text-white font-bold text-sm">اتصال آمن</span>
               </div>
               <p className="text-[10px]">هذا الموقع محمي بشهادة SSL عالمية لضمان سرية بياناتك المالية.</p>
-            </div>
-            <div className="flex items-center gap-4">
-               <img src="https://www.tra.gov.ae/assets/images/logo.png" alt="TRA" className="h-8 opacity-50" />
             </div>
           </div>
         </div>
