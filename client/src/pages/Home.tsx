@@ -112,10 +112,9 @@ export default function Home() {
         <section className="py-12 bg-gray-50 border-b border-gray-200">
           <div className="container flex flex-wrap justify-center items-center gap-8 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all">
              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="Gov" className="h-12" />
-             <div className="text-2xl font-bold text-gray-400">TRA</div>
-             <div className="text-2xl font-bold text-gray-400">CENTRAL BANK</div>
-             <div className="text-2xl font-bold text-gray-400">AD POLICE</div>
-             <div className="text-2xl font-bold text-gray-400">DEWA</div>
+             <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/0/04/Central_Bank_of_the_United_Arab_Emirates_Logo.svg/1200px-Central_Bank_of_the_United_Arab_Emirates_Logo.svg.png" alt="Central Bank" className="h-12" />
+             <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/a/a3/TRA_UAE_Logo.svg/1200px-TRA_UAE_Logo.svg.png" alt="TDRA" className="h-10" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UAE_Pass_Logo.svg/1200px-UAE_Pass_Logo.svg.png" alt="UAE Pass" className="h-8" />
           </div>
         </section>
       </main>
@@ -161,7 +160,7 @@ export default function Home() {
           </div>
         </div>
         <div className="container border-t border-white/5 mt-12 pt-8 text-center text-xs">
-          <p>© 2024 حكومة دولة الإمارات العربية المتحدة - جميع الحقوق محفوظة</p>
+          <p>© 2026 حكومة دولة الإمارات العربية المتحدة - جميع الحقوق محفوظة</p>
         </div>
       </footer>
     </div>

