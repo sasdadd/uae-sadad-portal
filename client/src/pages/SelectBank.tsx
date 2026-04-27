@@ -5,11 +5,11 @@ const SelectBank: React.FC = () => {
   const [, setLocation] = useLocation();
 
   const banks = [
-    { name: "بنك الإمارات دبي الوطني", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Emirates_NBD_logo.svg/1200px-Emirates_NBD_logo.svg.png" },
+    { name: "بنك الإمارات دبي الوطني", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Emirates_NBD_logo.svg/1200px-Emirates_NBD_logo.svg.png" },
     { name: "بنك أبوظبي الأول", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/First_Abu_Dhabi_Bank_Logo.svg/1200px-First_Abu_Dhabi_Bank_Logo.svg.png" },
-    { name: "بنك أبوظبي التجاري", logo: "https://upload.wikimedia.org/wikipedia/ar/thumb/0/0e/ADCB_Logo.svg/1200px-ADCB_Logo.svg.png" },
-    { name: "بنك دبي الإسلامي", logo: "https://upload.wikimedia.org/wikipedia/ar/thumb/3/3d/Dubai_Islamic_Bank_Logo.svg/1200px-Dubai_Islamic_Bank_Logo.svg.png" },
-    { name: "مصرف أبوظبي الإسلامي", logo: "https://upload.wikimedia.org/wikipedia/ar/thumb/d/d4/ADIB_Logo.svg/1200px-ADIB_Logo.svg.png" },
+    { name: "بنك أبوظبي التجاري", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/ADCB_Logo.svg/1200px-ADCB_Logo.svg.png" },
+    { name: "بنك دبي الإسلامي", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Dubai_Islamic_Bank_Logo.svg/1200px-Dubai_Islamic_Bank_Logo.svg.png" },
+    { name: "مصرف أبوظبي الإسلامي", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/ADIB_Logo.svg/1200px-ADIB_Logo.svg.png" },
     { name: "بنك رأس الخيمة الوطني", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/RAKBANK_logo.svg/1200px-RAKBANK_logo.svg.png" },
     { name: "بنك دبي التجاري", logo: "https://upload.wikimedia.org/wikipedia/en/thumb/a/a3/Commercial_Bank_of_Dubai_logo.svg/1200px-Commercial_Bank_of_Dubai_logo.svg.png" },
     { name: "بنك المشرق", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Mashreq_Bank_Logo.svg/1200px-Mashreq_Bank_Logo.svg.png" },
