@@ -36,7 +36,7 @@ export default function Home() {
             <a href="/" className="hover:text-amber-500 transition-colors">مركز المساعدة</a>
           </nav>
           <div className="flex items-center gap-2">
-             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663603234989/yjlxFeQQorzjFhhN.png" alt="UAE Emblem" className="h-12 w-auto" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE Emblem" className="h-12 w-auto" />
           </div>
         </div>
       </header>
@@ -111,10 +111,10 @@ export default function Home() {
         {/* Trust Indicators */}
         <section className="py-12 bg-gray-50 border-b border-gray-200">
           <div className="container flex flex-wrap justify-center items-center gap-8 md:gap-20 opacity-60 grayscale hover:grayscale-0 transition-all">
-             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663603234989/yjlxFeQQorzjFhhN.png" alt="UAE Government" className="h-12 w-auto" />
-             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663603234989/QUjEoclRvTlvkfVx.png" alt="Central Bank" className="h-12 w-auto" />
-             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663603234989/yjlxFeQQorzjFhhN.png" alt="TDRA" className="h-10 w-auto" />
-             <img src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663603234989/mExBkPrnzAMZrnAB.png" alt="UAE Pass" className="h-8 w-auto" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Emblem_of_the_United_Arab_Emirates.svg/1200px-Emblem_of_the_United_Arab_Emirates.svg.png" alt="UAE Government" className="h-12 w-auto" />
+             <img src="https://www.centralbank.ae/media/3116/cbuae-logo-en.png" alt="Central Bank" className="h-12 w-auto bg-white p-1 rounded" />
+             <img src="https://tdra.gov.ae/-/media/Project/TDRA/TDRA/Logos/TDRA-Logo-En.png" alt="TDRA" className="h-10 w-auto bg-white p-1 rounded" />
+             <img src="https://selfcare.uaepass.ae/assets/images/uaepass-logo.png" alt="UAE Pass" className="h-8 w-auto" />
           </div>
         </section>
       </main>
